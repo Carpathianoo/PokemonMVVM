@@ -21,8 +21,8 @@ struct ApiService: ApiServiceProtocol {
     }
     
     func callApi<T>(url: String, model: T.Type, completion: @escaping (Result<T, Error>) -> Void) where T : Decodable, T : Encodable {
-        guard let url = self.url else { return }
-        URLSession.shared.dataTask(with: url) { data, reponse, error in
+        guard let unwrappedUrl = URL(string: url) else { return }
+        URLSession.shared.dataTask(with: unwrappedUrl) { data, reponse, error in
             if let data = data {
                 do {
                     let modelData = try JSONDecoder().decode(T.self, from: data)

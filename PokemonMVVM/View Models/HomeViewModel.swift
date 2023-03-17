@@ -8,32 +8,30 @@
 import Foundation
 
 protocol HomeViewModelProtocol {
-    var urlString: String { get }
     var bindPokemonData: ((Pokemon?) -> ())? { get set }
     func fetchPokemonData()
 }
 
-
 class HomeViewModel: HomeViewModelProtocol {
-    var urlString: String
+    private var urlString: String = "https://pokeapi.co/api/v2/pokemon?limit=1000"
     private var apiServiceProtocol: ApiServiceProtocol?
     var pokemonData: Pokemon?
     
+    
     var bindPokemonData: ((Pokemon?) -> ())?
     
-    init(urlString: String, apiServiceProtocol: ApiServiceProtocol) {
-        self.urlString = urlString
+    init(apiServiceProtocol: ApiServiceProtocol) {
         self.apiServiceProtocol = apiServiceProtocol
         if let url = URL(string: urlString){
             self.apiServiceProtocol?.get(url: url)
         }
         fetchPokemonData()
     }
-    
+        
     
     
     func fetchPokemonData() {
-        self.apiServiceProtocol?.callApi(model: Pokemon.self, completion: { response in
+        self.apiServiceProtocol?.callApi(url: self.urlString, model: Pokemon.self, completion: { response in
             switch response {
             case .success(let success):
                 print(success)

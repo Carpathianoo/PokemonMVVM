@@ -23,7 +23,7 @@ class HomeViewController: UIViewController {
     }
 
     func callApi() {
-        self.homeVM = HomeViewModel(urlString: "https://pokeapi.co/api/v2/pokemon?limit=1000", apiServiceProtocol: ApiService())
+        self.homeVM = HomeViewModel(apiServiceProtocol: ApiService())
         
         self.homeVM?.bindPokemonData = { pokemonModel in
             
@@ -45,8 +45,9 @@ class HomeViewController: UIViewController {
     }
     
     
-    func moveToDetailPage() {
+    func moveToDetailPage(index: Int) {
         let vc = DetailViewController()
+        vc.detailUrl = self.pokemonData?.results[index].url
         self.navigationController?.pushViewController(vc, animated: true)
     }
 }
@@ -79,7 +80,7 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout, UICollectionVi
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        moveToDetailPage()
+        moveToDetailPage(index: indexPath.row)
     }
 }
 

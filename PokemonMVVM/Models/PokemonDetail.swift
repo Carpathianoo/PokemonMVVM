@@ -7,14 +7,14 @@
 
 import Foundation
 
-//struct PokemonDetail: Codable {
-//
-//    let id: Int
-//    let name: String
-//    let moves: [Move]
-//    let sprite: Sprite
-//    let stats: Stat
-//    let types:
-//
-//
-//}
+struct PokemonDetail: Codable {
+
+    let id: Int
+    let name: String
+    let moves: [Move]
+    let sprite: Sprite
+    let stats: Stat
+    let types:
+
+
+}

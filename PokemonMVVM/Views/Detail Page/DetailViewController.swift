@@ -18,10 +18,11 @@ class DetailViewController: UIViewController {
     
     @IBOutlet weak var detailTable: UITableView!
     
-    
+    var detailUrl: String?
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        print("detail url: \(detailUrl)")
         setupTable()
     }
     
