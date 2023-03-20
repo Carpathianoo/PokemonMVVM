@@ -20,8 +20,8 @@ class HomeViewModel: HomeViewModelProtocol {
     
     var bindPokemonData: ((Pokemon?) -> ())?
     
-    init(apiServiceProtocol: ApiServiceProtocol) {
-        self.apiServiceProtocol = apiServiceProtocol
+    init() {
+        self.apiServiceProtocol = ApiService()
         if let url = URL(string: urlString){
             self.apiServiceProtocol?.get(url: url)
         }

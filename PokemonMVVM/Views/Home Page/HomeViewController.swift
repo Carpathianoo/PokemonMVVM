@@ -23,7 +23,7 @@ class HomeViewController: UIViewController {
     }
 
     func callApi() {
-        self.homeVM = HomeViewModel(apiServiceProtocol: ApiService())
+        self.homeVM = HomeViewModel()
         
         self.homeVM?.bindPokemonData = { pokemonModel in
             
@@ -48,6 +48,7 @@ class HomeViewController: UIViewController {
     func moveToDetailPage(index: Int) {
         let vc = DetailViewController()
         vc.detailUrl = self.pokemonData?.results[index].url
+        vc.title = pokemonData?.results[index].name
         self.navigationController?.pushViewController(vc, animated: true)
     }
 }
