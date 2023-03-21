@@ -24,6 +24,8 @@ class DetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.largeTitleDisplayMode = .never
+
         setupVM()
         setupTable()
     }
@@ -37,6 +39,7 @@ class DetailViewController: UIViewController {
     }
     
     func setupTable() {
+        detailTable.allowsSelection = false
         detailTable.delegate = self
         detailTable.dataSource = self
         detailTable.register(UINib(nibName: "DetailHeaderCell", bundle: nil), forCellReuseIdentifier: DetailHeaderCell.identifier)
@@ -66,12 +69,18 @@ extension DetailViewController: UITableViewDelegate, UITableViewDataSource {
         2
     }
     
-//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//        100
-//    }
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        1
+        let sections = Sections(rawValue: section)
+        
+        switch sections {
+        case .header:
+             return 1
+        case .info:
+            print("Pokemon Moves count: \(pokemonDetailData?.moves.count ?? 0)")
+            return pokemonDetailData?.moves.count ?? 0
+        case .none:
+            return 0
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -89,6 +98,8 @@ extension DetailViewController: UITableViewDelegate, UITableViewDataSource {
         case .info:
             guard let cell = detailTable.dequeueReusableCell(withIdentifier: DetailInfoCell.identifier) as? DetailInfoCell else { return UITableViewCell() }
 
+            cell.configure(move: detailData.moves[indexPath.row].move)
+            
             return cell
         default:
             return UITableViewCell()

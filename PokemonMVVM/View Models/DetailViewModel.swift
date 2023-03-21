@@ -15,7 +15,7 @@ protocol DetailViewModelProtocol {
 class DetailViewModel {
     private var url: String
     private var apiServiceProtocol: ApiServiceProtocol?
-//    var pokemonDetail: PokemonDetail?
+    var pokemonDetail: PokemonDetail?
 
     var delegate: DetailViewModelProtocol?
 
@@ -30,17 +30,43 @@ class DetailViewModel {
     
     func getDetail() {
         apiServiceProtocol?.callApi(url: self.url, model: PokemonDetail.self, completion: { response in
-//            print("detail url: \(self.url)")
-            print("this is the detail data:\(response) ")
-
             switch response {
             case .success(let data):
-//                self.pokemonDetail = data
-                self.delegate?.fetchDetail(pokemonDetail: data, error: nil)
+                
+                let group = DispatchGroup()
+                self.pokemonDetail = data
+                let moves = data.moves
+                
+                for (index, move) in moves.enumerated() {
+                    group.enter()
+                    self.getMoveDetail(url: move.move.url) { moveDetail in
+                        self.pokemonDetail?.moves[index].move.moveDetail = moveDetail
+                        group.leave()
+                    }
+                }
+                
+                group.notify(queue: .main) {
+                    self.delegate?.fetchDetail(pokemonDetail: self.pokemonDetail, error: nil)
+                }
             case .failure(let error):
                 print(error.localizedDescription)
                 self.delegate?.fetchDetail(pokemonDetail: nil, error: error)
             }
         })
     }
+    
+    func getMoveDetail(url: String, completion: @escaping (MoveDetailModel?) -> Void) {
+        apiServiceProtocol?.callApi(url: url, model: MoveDetailModel.self, completion: { response in
+            switch response {
+            case .success(let moveDetail):
+                return completion(moveDetail)
+
+            case .failure(let error):
+                print(error.localizedDescription)
+                return completion(nil)
+            }
+        })
+        
+    }
+    
 }

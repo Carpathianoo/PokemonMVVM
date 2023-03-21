@@ -11,29 +11,60 @@ struct PokemonDetail: Codable {
 
     let id: Int
     let name: String
-    let moves: [Move]
+    var moves: [Move]
     let sprites: Sprite
     let stats: [Stats]
 
 }
 
 struct Move: Codable {
-    let move: MoveModel
+    var move: MoveModel
+    
 }
 
 struct MoveModel: Codable {
     let name: String
-
+    let url: String
+    var moveDetail: MoveDetailModel?
 }
+
+struct MoveDetailModel: Codable {
+    let power: Int?
+    let accuracy: Int?
+    let pp: Int?
+    let effectEntries: [EffectModel]
+    
+    enum CodingKeys: String, CodingKey {
+        case power
+        case accuracy
+        case pp
+        case effectEntries = "effect_entries"
+    }
+    
+    var effectString: String? {
+        var effectEntriesEn: EffectModel?
+        
+        effectEntriesEn = effectEntries.first
+        
+        if let effectEntriesEn = effectEntriesEn {
+            return effectEntriesEn.effect
+        } else {
+            return nil
+        }
+    }
+}
+
+struct EffectModel: Codable {
+    let effect: String?
+}
+
 
 struct Sprite: Codable {
     let other: HomeSprite
-
 }
 
 struct HomeSprite: Codable {
     let home: SpritesUrl
-    
 }
 
 struct SpritesUrl: Codable {
@@ -42,7 +73,6 @@ struct SpritesUrl: Codable {
     enum CodingKeys: String, CodingKey {
         case frontDefault = "front_default"
     }
-
 }
 
 struct Stats: Codable {

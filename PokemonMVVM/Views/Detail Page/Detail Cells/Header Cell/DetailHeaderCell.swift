@@ -12,8 +12,17 @@ class DetailHeaderCell: UITableViewCell {
 
     static let identifier = "DetailHeaderCell"
     
-    @IBOutlet weak var pokemonName: UILabel!
-    @IBOutlet weak var pokemonHp: UILabel!
+    @IBOutlet weak var pokemonName: UILabel! {
+        didSet {
+            pokemonName.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        }
+    }
+    @IBOutlet weak var pokemonHp: UILabel! {
+        didSet {
+            pokemonHp.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+            pokemonHp.textColor = .orange
+        }
+    }
     @IBOutlet weak var pokemonImage: UIImageView!
     
     override func awakeFromNib() {
@@ -21,9 +30,9 @@ class DetailHeaderCell: UITableViewCell {
     }
     
     func configure(detailModel: PokemonDetail) {
-        self.pokemonName.text = detailModel.name
+        self.pokemonName.text = detailModel.name.capitalized
         self.pokemonImage.sd_setImage(with: URL(string: detailModel.sprites.other.home.frontDefault))
-        self.pokemonHp.text = "\(detailModel.stats[0].baseStat)Hp"
+        self.pokemonHp.text = "\(detailModel.stats[0].baseStat) HP"
     }
     
 }
